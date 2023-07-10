@@ -60,7 +60,7 @@ After that, set the newly added classes to the stitching pipeline.<br />
 [CPPDemo](cppDemo.cpp)<br />  
 
 For those who are not familiar with C++, I also provide a C#Demo.
-[CSharpDemo](csharpDemo.cpp)<br />  
+[CSharpDemo](csharpDemo.cs)<br />  
 
 Follow our WeChat official account: 人工智能大讲堂 (AI Lecture Hall)
 
