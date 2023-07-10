@@ -66,5 +66,5 @@ LightGlue:<br />
 [CPPDemo](cppDemo.cpp)<br />  
 
 对于不熟悉C++的，我还提供了C#Demo<br />  
-[CSharpDemo](csharpDemo.cpp)<br />  
+[CSharpDemo](csharpDemo.cs)<br />  
 
