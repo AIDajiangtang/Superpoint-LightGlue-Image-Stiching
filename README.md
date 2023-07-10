@@ -1,11 +1,11 @@
 简体中文 | [English](README_EN.md)
 
 # DeepLearning-based-Feature-extraction-and-matching
-Integrate SuperPoint and LightGlue into OpenCV image stitching algorithm
+将深度学习预训练模型 SuperPoint 和 LightGlue 集成到OpenCV拼接算法中。<br />  
 
-图像特征提取与匹配是许多高级计算机视觉任务的基础，例如图像配准，图像拼接，相机矫正，SLAM，深度估计等等。
+图像特征提取与匹配是许多高级计算机视觉任务的基础，例如图像配准，图像拼接，相机矫正，SLAM，深度估计等等。<br />  
 
-今天我们就以图像拼接为切入点，来看一下特征提取与匹配的重要性。
+今天我们就以图像拼接为切入点，来看一下特征提取与匹配的重要性。<br />  
 
 OpenCV中提供了封装程度非常高的Stitcher类，通过下面几行代码就能实现图像拼接。<br />  
 Mat pano;<br />  
