@@ -7,64 +7,64 @@ Integrate SuperPoint and LightGlue into OpenCV image stitching algorithm
 
 今天我们就以图像拼接为切入点，来看一下特征提取与匹配的重要性。
 
-OpenCV中提供了封装程度非常高的Stitcher类，通过下面几行代码就能实现图像拼接。
-Mat pano;
-Ptr<Stitcher> stitcher = Stitcher::create(mode);
-Stitcher::Status status = stitcher->stitch(imgs, pano);
+OpenCV中提供了封装程度非常高的Stitcher类，通过下面几行代码就能实现图像拼接。<br />  
+Mat pano;<br />  
+Ptr<Stitcher> stitcher = Stitcher::create(mode);<br />  
+Stitcher::Status status = stitcher->stitch(imgs, pano);<br />  
 
-但图像拼接整个过程非常复杂。
-用文字总结一下拼接算法的主要流程：
+但图像拼接整个过程非常复杂。<br />  
+用文字总结一下拼接算法的主要流程：<br />  
 
-特征提取->特征匹配->评估相机参数->生成融合图像
-其中特征提取最为重要，特征点和特征描述符的质量好坏决定了最终的拼接效果。
+特征提取->特征匹配->评估相机参数->生成融合图像<br />  
+其中特征提取最为重要，特征点和特征描述符的质量好坏决定了最终的拼接效果。<br />  
 
-目前OpenCV中提供了SIFT，SURF，ORB等特征提取器。
+目前OpenCV中提供了SIFT，SURF，ORB等特征提取器。<br />  
 
-目前OpenCV中提供了Brute-Force，FLANN，KNN等特征匹配器。
+目前OpenCV中提供了Brute-Force，FLANN，KNN等特征匹配器。<br />  
 
-然后，通过下面代码将选择的特征提取和匹配算法设置到拼接流水线中。
+然后，通过下面代码将选择的特征提取和匹配算法设置到拼接流水线中。<br />  
 
-if (feature_type == FeatureType::SURF)
-    stitcher->setFeaturesFinder(xfeatures2d::SURF::create());
-  else if (feature_type == FeatureType::SIFT)
-    stitcher->setFeaturesFinder(SIFT::create());
-  else
-    stitcher->setFeaturesFinder(ORB::create());
+if (feature_type == FeatureType::SURF)<br />  
+    stitcher->setFeaturesFinder(xfeatures2d::SURF::create());<br />  
+  else if (feature_type == FeatureType::SIFT)<br />  
+    stitcher->setFeaturesFinder(SIFT::create());<br />  
+  else<br />  
+    stitcher->setFeaturesFinder(ORB::create());<br />  
     
-stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestMatcher>( false));
-stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestRangeMatcher>( false));
-stitcher->setFeaturesMatcher(makePtr<detail::AffineBestOf2NearestMatcher>(true, false));
+stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestMatcher>( false));<br />  
+stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestRangeMatcher>( false));<br />  
+stitcher->setFeaturesMatcher(makePtr<detail::AffineBestOf2NearestMatcher>(true, false));<br />  
 
 
-这要感谢C++面向对象编程的思想，通过继承与多态来实现不同特征提取和匹配算法的扩展。
+这要感谢C++面向对象编程的思想，通过继承与多态来实现不同特征提取和匹配算法的扩展。<br />  
 
-说到这里该我们的主角出场了，我们要为OpenCV追加一种深度学习特征提取算法：SuperPoint，以及深度学习特征匹配算法：LightGlue。
-SuperPoint：
+说到这里该我们的主角出场了，我们要为OpenCV追加一种深度学习特征提取算法：SuperPoint，以及深度学习特征匹配算法：LightGlue。<br />  
+SuperPoint：<br />  
 ​
-论文地址：https://arxiv.org/pdf/1712.07629.pdf
+论文地址：https://arxiv.org/pdf/1712.07629.pdf<br />  
 ​
-官方源码：https://github.com/rpautrat/SuperPoint
+官方源码：https://github.com/rpautrat/SuperPoint<br />  
 ​
-LightGlue:
+LightGlue:<br />  
 ​
-论文地址：https://arxiv.org/pdf/2306.13643.pdf
+论文地址：https://arxiv.org/pdf/2306.13643.pdf<br />  
 ​
-官方源码：https://github.com/cvg/LightGlue
+官方源码：https://github.com/cvg/LightGlue<br />  
 
 
-根据OpenCV中类继承体系，特征提取类的基类为Feature2D，特征匹配的基类为FeaturesMatcher，我们以此为基类新增两个类：SuperPoint和LightGlue，并重新实现基类的虚方法。
+根据OpenCV中类继承体系，特征提取类的基类为Feature2D，特征匹配的基类为FeaturesMatcher，我们以此为基类新增两个类：SuperPoint和LightGlue，并重新实现基类的虚方法。<br />  
 
-[superpoint](superpoint.cpp)
-[lightglue](lightglue.cpp)
+[superpoint](superpoint.cpp)<br />  
+[lightglue](lightglue.cpp)<br />  
 
 
 关注微信公众号：**人工智能大讲堂**<br />  
 <img width="180" src="https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg"><br /> 
-后台回复【sl】获取上面的预训练模型。
+后台回复【sl】获取上面的预训练模型。<br />  
 
-然后将新增加的类设置到拼接流水线中。
-[CPPDemo](cppDemo.cpp)
+然后将新增加的类设置到拼接流水线中。<br />  
+[CPPDemo](cppDemo.cpp)<br />  
 
-对于不熟悉C++的，我还提供了C#Demo
-[CSharpDemo](csharpDemo.cpp)
+对于不熟悉C++的，我还提供了C#Demo<br />  
+[CSharpDemo](csharpDemo.cpp)<br />  
 
