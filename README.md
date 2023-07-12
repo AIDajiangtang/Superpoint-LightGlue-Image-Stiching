@@ -56,11 +56,11 @@ LightGlue:<br />
 
 [superpoint](superpoint.cpp)<br />  
 [lightglue](lightglue.cpp)<br />  
-
+依赖的第三方库有OpenCV和ONNXRuntime，OPenCV是Visual Studio2019编译的。<br />  
 
 关注微信公众号：**人工智能大讲堂**<br />  
 <img width="180" src="https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg"><br /> 
-后台回复【sl】获取上面的预训练模型。<br />  
+后台回复【sl】获取上面的预训练模型和第三方依赖库。<br />  
 
 然后将新增加的类设置到拼接流水线中。<br />  
 [CPPDemo](cppDemo.cpp)<br />  
