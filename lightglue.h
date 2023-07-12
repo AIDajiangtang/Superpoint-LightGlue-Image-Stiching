@@ -25,15 +25,13 @@ using namespace std;
 class  FEATURE_MATCHER_EXPORTS LightGlue :public FeaturesMatcher
 {
 protected:
-	float m_width;
-	float m_height;
 
 	CV_WRAP_AS(apply) void operator ()(const ImageFeatures& features1, const ImageFeatures& features2,
 		CV_OUT MatchesInfo& matches_info) {
 		match(features1, features2, matches_info);
 	}
 public:
-	LightGlue(int wid, int hei);
+	LightGlue();
 	void match(const ImageFeatures& features1, const ImageFeatures& features2,
 		MatchesInfo& matches_info);
 
