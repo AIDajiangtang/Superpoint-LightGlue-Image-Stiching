@@ -1,11 +1,8 @@
 #include"lightglue.h"
 
 
-LightGlue::LightGlue(int wid, int hei)
+LightGlue::LightGlue()
 {
-	this->m_width = wid;
-	this->m_height = hei;
-
 	/*	HMODULE g_hInstance;
 		g_hInstance = ::GetCurrentModule();
 		HRSRC hRcmodel = FindResource(g_hInstance, MAKEINTRESOURCE(IDR_LIGHTGLUE1), "LIGHTGLUE");
@@ -31,17 +28,19 @@ void LightGlue::match(const ImageFeatures& features1, const ImageFeatures& featu
 	static Ort::Session lightglueSession(env, wstr.c_str(), sessionOptions);
 	vector<float>kp1; kp1.resize(features1.keypoints.size() * 2);
 	vector<float>kp2; kp2.resize(features2.keypoints.size() * 2);
-	float halfwid = this->m_width / 2;
-	float halfhei = this->m_height / 2;
+	float f1wid = features1.img_size.width / 2.0f;
+	float f1hei = features1.img_size.height / 2.0f;
 	for (int i = 0; i < features1.keypoints.size(); i++)
 	{
-		kp1[2 * i] = (features1.keypoints[i].pt.x - halfwid) / halfwid;
-		kp1[2 * i + 1] = (features1.keypoints[i].pt.y - halfhei) / halfhei;
+		kp1[2 * i] = (features1.keypoints[i].pt.x - f1wid) / f1wid;
+		kp1[2 * i + 1] = (features1.keypoints[i].pt.y - f1hei) / f1hei;
 	}
+	float f2wid = features2.img_size.width / 2.0f;
+	float f2hei = features2.img_size.height / 2.0f;
 	for (int i = 0; i < features2.keypoints.size(); i++)
 	{
-		kp2[2 * i] = (features2.keypoints[i].pt.x - halfwid) / halfwid;
-		kp2[2 * i + 1] = (features2.keypoints[i].pt.y - halfhei) / halfhei;
+		kp2[2 * i] = (features2.keypoints[i].pt.x - f2wid) / f2wid;
+		kp2[2 * i + 1] = (features2.keypoints[i].pt.y - f2hei) / f2hei;
 	}
 
 	vector<float>des1; des1.resize(features1.keypoints.size() * 256);
