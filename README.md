@@ -66,6 +66,8 @@ LightGlue:<br />
 1.微信公众号回复【sl】获取预训练模型，将模型放到D盘根目录（或者将dll以资源的方式存储到dll中）
 2.微信公众号回复【sl】获取第三方库：OpenCV和ONNXRuntime，然后将其解压到源码目录，OPenCV是我用Visual Studio2019编译的。ONNXRuntime不需要自己编译，下载官网编译好的即可<br />  
 最终的项目结构如下：<br /> 
+<img width="180" src="[https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg](https://github.com/AIDajiangtang/DeepLearning-based-Feature-extraction-and-matching/assets/18625471/bac20d31-b113-4023-ada9-c62327e26c99)"><br /> 
+
 project_root/
   |- common.h
   |- superpoint.h
