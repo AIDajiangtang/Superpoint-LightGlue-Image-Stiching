@@ -56,11 +56,30 @@ LightGlue:<br />
 
 [superpoint](superpoint.cpp)<br />  
 [lightglue](lightglue.cpp)<br />  
-依赖的第三方库有OpenCV和ONNXRuntime，OPenCV是Visual Studio2019编译的。<br />  
 
 关注微信公众号：**人工智能大讲堂**<br />  
 <img width="180" src="https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg"><br /> 
 后台回复【sl】获取上面的预训练模型和第三方依赖库。<br />  
+
+本地编译方法：<br />  
+目前仅在Windows 11，Visualstudio2019，Cmake3.26.4中测试成功 <br />  
+1.微信公众号回复【sl】获取预训练模型，将模型放到D盘根目录（或者将dll以资源的方式存储到dll中）
+2.微信公众号回复【sl】获取第三方库：OpenCV和ONNXRuntime，然后将其解压到源码目录，OPenCV是我用Visual Studio2019编译的。ONNXRuntime不需要自己编译，下载官网编译好的即可<br />  
+最终的项目结构如下：<br /> 
+project_root/
+  |- common.h
+  |- superpoint.h
+  |- superpoint.cpp
+  |- lightglue.h
+  |- lightglue.cpp
+  |- cppDemo.cpp
+  |- opencv/
+  |- onnxruntime-win-x64-1.15.1/
+  |- CMakeLists.txt
+
+3.打开Cmake，输入源码路径和编译输出路径，然后以此点积Config，Generate，Open Project
+
+
 
 然后将新增加的类设置到拼接流水线中。<br />  
 [CPPDemo](cppDemo.cpp)<br />  
