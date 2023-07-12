@@ -55,7 +55,24 @@ According to the inheritance system of OpenCV classes, the base class of the fea
 
 [superpoint](superpoint.cpp)<br />  
 [lightglue](lightglue.cpp)<br />  
-The dependent third-party libraries include OpenCV and ONNXRuntime, and OPenCV is compiled by Visual Studio2019.<br />  
+
+Local compilation method:<br />
+Currently only tested successfully in Windows 11, Visualstudio2019, Cmake3.26.4 <br />
+1. Reply [sl] from the WeChat official account to obtain the pre-trained model, and put the model in the root directory of the D drive (or store the dll in the dll as a resource)
+2. WeChat public account reply [sl] Obtain third-party libraries: OpenCV and ONNXRuntime, and then decompress them to the source code directory. I compiled OPenCV with Visual Studio2019. ONNXRuntime does not need to be compiled by itself, just download the compiled one from the official website<br />
+The final project structure is as follows:<br />
+project_root/
+   |- common.h
+   |- superpoint.h
+   |- superpoint.cpp
+   |- lightglue.h
+   |- lightglue.cpp
+   |- cppDemo.cpp
+   |- opencv/
+   |-onnxruntime-win-x64-1.15.1/
+   |- CMakeLists.txt
+
+3. Open Cmake, enter the source code path and the compiled output path, and then use this dot product Config, Generate, Open Project
 
 After that, set the newly added classes to the stitching pipeline.<br />  
 [CPPDemo](cppDemo.cpp)<br />  
