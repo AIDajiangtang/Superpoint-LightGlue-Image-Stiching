@@ -1,8 +1,8 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/stitching.hpp"
-#include "superpoint.cpp"
-#include "lightglue.cpp"
+#include "superpoint.h"
+#include "lightglue.h"
 #include <iostream>
 
 using namespace std;
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     Mat pano;
     Ptr<Stitcher> stitcher = Stitcher::create(mode);
     stitcher->setFeaturesFinder(makePtr<SuperPoint>());//SpuerPoint feature extraction
-    stitcher->setFeaturesMatcher(makePtr<LightGlue>());/LightGlue feature matching
+    stitcher->setFeaturesMatcher(makePtr<LightGlue>(512,512));//LightGlue feature matching
     Stitcher::Status status = stitcher->stitch(imgs, pano);
 
     if (status != Stitcher::OK)
