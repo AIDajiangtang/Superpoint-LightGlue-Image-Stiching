@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     Mat pano;
     Ptr<Stitcher> stitcher = Stitcher::create(mode);
     stitcher->setFeaturesFinder(makePtr<SuperPoint>());//SpuerPoint feature extraction
-    stitcher->setFeaturesMatcher(makePtr<LightGlue>(512,512));//LightGlue feature matching
+    stitcher->setFeaturesMatcher(makePtr<LightGlue>());//LightGlue feature matching
     Stitcher::Status status = stitcher->stitch(imgs, pano);
 
     if (status != Stitcher::OK)
