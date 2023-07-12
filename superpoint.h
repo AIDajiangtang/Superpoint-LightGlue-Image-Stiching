@@ -16,12 +16,12 @@
 #include "opencv2/calib3d.hpp"
 #include <onnxruntime_cxx_api.h>
 #include <math.h>
-
+#include "common.h"
 using namespace cv::detail;
 using namespace cv;
 using namespace std;
 
-class SuperPoint :public Feature2D
+class  FEATURE_MATCHER_EXPORTS SuperPoint :public Feature2D
 {
 protected:
 	vector<float> ApplyTransform(const Mat& image, float& mean, float& std);

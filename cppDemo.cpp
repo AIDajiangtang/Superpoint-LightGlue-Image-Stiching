@@ -4,7 +4,7 @@
 #include "superpoint.h"
 #include "lightglue.h"
 #include <iostream>
-
+#include "common.h"
 using namespace std;
 using namespace cv;
 

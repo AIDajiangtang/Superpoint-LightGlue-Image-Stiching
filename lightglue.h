@@ -17,12 +17,12 @@
 #include "opencv2/calib3d.hpp"
 #include <onnxruntime_cxx_api.h>
 #include <math.h>
-
+#include "common.h"
 using namespace cv::detail;
 using namespace cv;
 using namespace std;
 
-class LightGlue :public FeaturesMatcher
+class  FEATURE_MATCHER_EXPORTS LightGlue :public FeaturesMatcher
 {
 protected:
 	float m_width;

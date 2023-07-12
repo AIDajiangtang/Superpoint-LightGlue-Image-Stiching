@@ -4,7 +4,7 @@ project(FeatureMatcherDemo)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
 
-# è®¾ç½®ç¼–è¯‘ç±»å‹
+# ÉèÖÃ±àÒëÀàĞÍ
 set(CMAKE_BUILD_TYPE Release)
 
 # Find OpenCV
@@ -15,13 +15,14 @@ set(OpenCV_LIBS "../opencv/lib/opencv_world455")
 set(ONNXRUNTIME_INCLUDE_DIRS "./onnxruntime-win-x64-1.15.1/include")
 set(ONNXRUNTIME_LIBRARIES "../onnxruntime-win-x64-1.15.1/lib/onnxruntime")
 
-# æ·»åŠ å¯æ‰§è¡Œæ–‡ä»¶ä¾èµ–åº“çš„æŸ¥æ‰¾è·¯å¾„
-add_library(feature_matcher SHARED superpoint.h superpoint.cpp  lightglue.h lightglue.cpp)
+# Ìí¼Ó¿ÉÖ´ĞĞÎÄ¼şÒÀÀµ¿âµÄ²éÕÒÂ·¾¶
+add_library(feature_matcher SHARED common.h superpoint.h superpoint.cpp  lightglue.h lightglue.cpp)
 target_include_directories(feature_matcher PRIVATE ${OpenCV_INCLUDE_DIRS} ${ONNXRUNTIME_INCLUDE_DIRS})
 target_link_libraries(feature_matcher ${OpenCV_LIBS} ${ONNXRUNTIME_LIBRARIES})
-set(LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
-# ç¼–è¯‘ç”ŸæˆcppDemoå¯æ‰§è¡Œæ–‡ä»¶
-add_executable(cppDemo cppDemo.cpp)
+target_compile_definitions(feature_matcher PRIVATE FEATURE_MATCHER_EXPORTS)
+
+# ±àÒëÉú³ÉcppDemo¿ÉÖ´ĞĞÎÄ¼ş
+add_executable(cppDemo common.h cppDemo.cpp)
 target_include_directories(cppDemo PRIVATE ${OpenCV_INCLUDE_DIRS} ${ONNXRUNTIME_INCLUDE_DIRS})
 target_link_libraries(cppDemo
                       ${OpenCV_LIBS}
