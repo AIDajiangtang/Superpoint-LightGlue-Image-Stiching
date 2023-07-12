@@ -55,6 +55,7 @@ According to the inheritance system of OpenCV classes, the base class of the fea
 
 [superpoint](superpoint.cpp)<br />  
 [lightglue](lightglue.cpp)<br />  
+The dependent third-party libraries include OpenCV and ONNXRuntime, and OPenCV is compiled by Visual Studio2019.<br />  
 
 After that, set the newly added classes to the stitching pipeline.<br />  
 [CPPDemo](cppDemo.cpp)<br />  
@@ -64,4 +65,4 @@ For those who are not familiar with C++, I also provide a C#Demo.<br />
 
 Follow our WeChat official account: 人工智能大讲堂<br />  
 <img width="180" src="https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg"><br /> 
-Reply "sl" in the background to obtain the pre-trained models mentioned above.
+Reply "sl" in the background to obtain the pre-trained models and third-party dependent libraries mentioned above.<br /> 
