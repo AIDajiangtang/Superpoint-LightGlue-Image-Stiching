@@ -87,8 +87,8 @@ project_root/
 [CPPDemo](cppDemo.cpp)<br />  
 Mat pano;<br />  
 Ptr<Stitcher> stitcher = Stitcher::create(mode);<br />  
-stitcher->setFeaturesFinder(makePtr<SuperPoint>());//SpuerPoint feature extraction<br />  
-stitcher->setFeaturesMatcher(makePtr<LightGlue>());//LightGlue feature matching<br />  
+stitcher->setFeaturesFinder(makePtr&lt;SuperPoint&gt;());//SpuerPoint feature extraction<br />  
+stitcher->setFeaturesMatcher(makePtr&lt;LightGlue&gt;());//LightGlue feature matching<br />  
 Stitcher::Status status = stitcher->stitch(imgs, pano);<br />  
 
 对于不熟悉C++的，我还提供了C#Demo<br />  
