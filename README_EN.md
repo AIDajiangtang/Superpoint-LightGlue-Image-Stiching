@@ -76,6 +76,11 @@ project_root/
 
 After that, set the newly added classes to the stitching pipeline.<br />  
 [CPPDemo](cppDemo.cpp)<br />  
+Mat pano;<br />  
+Ptr<Stitcher> stitcher = Stitcher::create(mode);<br />  
+stitcher->setFeaturesFinder(makePtr<SuperPoint>());//SpuerPoint feature extraction<br />  
+stitcher->setFeaturesMatcher(makePtr<LightGlue>());//LightGlue feature matching<br />  
+Stitcher::Status status = stitcher->stitch(imgs, pano);<br />  
 
 For those who are not familiar with C++, I also provide a C#Demo.<br />  
 [CSharpDemo](csharpDemo.cs)<br />  
