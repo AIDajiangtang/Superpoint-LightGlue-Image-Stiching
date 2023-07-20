@@ -85,6 +85,11 @@ project_root/
 
 然后将新增加的类设置到拼接流水线中。<br />  
 [CPPDemo](cppDemo.cpp)<br />  
+Mat pano;<br />  
+Ptr<Stitcher> stitcher = Stitcher::create(mode);<br />  
+stitcher->setFeaturesFinder(makePtr<SuperPoint>());//SpuerPoint feature extraction<br />  
+stitcher->setFeaturesMatcher(makePtr<LightGlue>());//LightGlue feature matching<br />  
+Stitcher::Status status = stitcher->stitch(imgs, pano);<br />  
 
 对于不熟悉C++的，我还提供了C#Demo<br />  
 [CSharpDemo](csharpDemo.cs)<br />  
