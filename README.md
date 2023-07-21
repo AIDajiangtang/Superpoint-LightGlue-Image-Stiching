@@ -3,7 +3,7 @@
 # DeepLearning-based-Feature-extraction-and-matching
 将深度学习预训练模型 SuperPoint 和 LightGlue 集成到OpenCV拼接算法中。<br />  
 
- ## OpenCV拼接流水线</h2><br />  
+ ## OpenCV拼接流水线</h2>
 图像特征提取与匹配是许多高级计算机视觉任务的基础，例如图像配准，图像拼接，相机矫正，SLAM，深度估计等等。<br />  
 今天我们就以图像拼接为切入点，来看一下特征提取与匹配的重要性。<br />  
 
