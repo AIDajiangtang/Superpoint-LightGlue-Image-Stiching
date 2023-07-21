@@ -16,7 +16,7 @@ Stitcher::Status status = stitcher->stitch(imgs, pano);
 用文字总结一下拼接算法的主要流程：  
 特征提取->特征匹配->评估相机参数->生成融合图像  
 
-其中特征提取最为重要，特征点和特征描述符的质量好坏决定了最终的拼接效果。  
+其中特征提取最为重要，特征点和特征描述符的质量好坏决定了最终的拼接效果。 
 
 目前OpenCV中提供了SIFT，SURF，ORB等特征提取器。  
 目前OpenCV中提供了Brute-Force，FLANN，KNN等特征匹配器。  
@@ -50,7 +50,7 @@ LightGlue:
 [superpoint](superpoint.cpp)  
 [lightglue](lightglue.cpp)  
 
- ##如何编译</h2>  
+ ## 如何编译</h2>  
 目前仅在Windows 11，Visualstudio2019，Cmake3.26.4中测试成功   
 1.微信公众号回复【sl】获取预训练模型，将模型放到D盘根目录（或者将dll以资源的方式存储到dll中）  
 微信公众号：**人工智能大讲堂**  
@@ -58,7 +58,6 @@ LightGlue:
 后台回复【sl】获取上面的预训练模型和第三方依赖库。  
 2.微信公众号回复【sl】获取第三方库：OpenCV和ONNXRuntime，然后将其解压到源码目录，OPenCV是我用Visual Studio2019编译的。ONNXRuntime不需要自己编译，下载官网编译好的即可  
 最终的项目结构如下：  
-
 project_root/  
   |- common.h  
   |- superpoint.h  
