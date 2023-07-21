@@ -8,7 +8,7 @@
 今天我们就以图像拼接为切入点，来看一下特征提取与匹配的重要性。
 
 OpenCV中提供了封装程度非常高的Stitcher类，通过下面几行代码就能实现图像拼接。  
-Mat pano;
+Mat pano;  
 Ptr<Stitcher> stitcher = Stitcher::create(mode);
 Stitcher::Status status = stitcher->stitch(imgs, pano);
 
