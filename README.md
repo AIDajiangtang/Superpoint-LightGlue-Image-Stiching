@@ -3,7 +3,7 @@
 # DeepLearning-based-Feature-extraction-and-matching
 将深度学习预训练模型 SuperPoint 和 LightGlue 集成到OpenCV拼接算法中。<br />  
 
- ##OpenCV拼接流水线</h2>
+ ## OpenCV拼接流水线</h2><br />  
 图像特征提取与匹配是许多高级计算机视觉任务的基础，例如图像配准，图像拼接，相机矫正，SLAM，深度估计等等。<br />  
 今天我们就以图像拼接为切入点，来看一下特征提取与匹配的重要性。<br />  
 
@@ -36,7 +36,7 @@ stitcher->setFeaturesMatcher(makePtr<detail::AffineBestOf2NearestMatcher>(true, 
 
 这要感谢C++面向对象编程的思想，通过继承与多态来实现不同特征提取和匹配算法的扩展。<br />  
 
- ##深度学习特征检测匹配算法</h2>
+ ## 深度学习特征检测匹配算法</h2><br />  
 说到这里该我们的主角出场了，我们要为OpenCV追加一种深度学习特征提取算法：SuperPoint，以及深度学习特征匹配算法：LightGlue。<br />  
 SuperPoint：<br />  ​
 论文地址：https://arxiv.org/pdf/1712.07629.pdf<br />  
@@ -58,7 +58,6 @@ LightGlue:<br />
 后台回复【sl】获取上面的预训练模型和第三方依赖库。<br />  
 2.微信公众号回复【sl】获取第三方库：OpenCV和ONNXRuntime，然后将其解压到源码目录，OPenCV是我用Visual Studio2019编译的。ONNXRuntime不需要自己编译，下载官网编译好的即可<br />  
 最终的项目结构如下：<br /> 
-<img width="180" src="[https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg](https://github.com/AIDajiangtang/DeepLearning-based-Feature-extraction-and-matching/assets/18625471/bac20d31-b113-4023-ada9-c62327e26c99)"><br /> 
 
 project_root/
   |- common.h
@@ -73,7 +72,7 @@ project_root/
 
 3.打开Cmake，输入源码路径和编译输出路径，然后以此点积Config，Generate，Open Project
 
- ##集成到OpenCV中</h2>
+ ## 集成到OpenCV中</h2><br />  
 然后将新增加的类设置到拼接流水线中。<br />  
 [CPPDemo](cppDemo.cpp)<br />  
 Mat pano;<br />  
