@@ -55,7 +55,7 @@ void SuperPoint::detectAndCompute(InputArray image, InputArray mask,
 	float mean, std;
 	vector<float> imgData = ApplyTransform(grayImg, mean, std);
 
-	vector<int64_t> inputShape{ 1, 1, grayImg.cols, grayImg.rows };
+	vector<int64_t> inputShape{ 1, 1, grayImg.rows，grayImg.cols};
 
 	Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
 	Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, imgData.data(), imgData.size(), inputShape.data(), inputShape.size());
@@ -110,7 +110,7 @@ void SuperPoint::detect(InputArray image,
 	cvtColor(img, grayImg, COLOR_BGR2GRAY);
 	float mean, std;
 	vector<float> imgData = ApplyTransform(grayImg, mean, std);
-	vector<int64_t> inputShape{ 1, 1, grayImg.cols, grayImg.rows };
+	vector<int64_t> inputShape{ 1, 1,grayImg.rows，grayImg.cols};
 	Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
 	Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, imgData.data(), imgData.size(), inputShape.data(), inputShape.size());
 
@@ -151,7 +151,7 @@ void SuperPoint::compute(InputArray image,
 
 	vector<float> imgData = ApplyTransform(grayImg, mean, std);
 
-	vector<int64_t> inputShape{ 1, 1, grayImg.cols, grayImg.rows };
+	vector<int64_t> inputShape{ 1, 1,grayImg.rows， grayImg.cols };
 
 	Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
 	Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, imgData.data(), imgData.size(), inputShape.data(), inputShape.size());
