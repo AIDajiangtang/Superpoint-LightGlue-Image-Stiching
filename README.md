@@ -87,6 +87,8 @@ project_root/
 1.将onnxruntime.h和opencv_world455.dll（opencv_world455d.dll debug模式）放到exe路径下  
 2.运行cppDemo.exe，并设置参数，例如--mode panorama --lg D:\\superpoint_lightglue.onnx --sp D:\\superpoint.onnx D:\\1.jpg D:\2.jpg  
 
+<img width="300" src="https://user-images.githubusercontent.com/18625471/256421932-94e8b07b-fc4b-4307-a94e-e7e735d620d8.jpg">  
+
 拼接支持两种变换模型，仿射变换和透视变换，由--mode (panorama|scans)指定，panorama表示透视变换模型，scans代表仿射变换模型  
 --sp 指定superpoint onnx格式模型路径  
 --lg 指定lightflue onnx格式模型路径  
