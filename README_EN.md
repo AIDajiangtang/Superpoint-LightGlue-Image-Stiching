@@ -81,6 +81,11 @@ Ptr<Stitcher> stitcher = Stitcher::create(mode);<br />
 stitcher->setFeaturesFinder(makePtr&lt;SuperPoint&gt;());//SpuerPoint feature extraction<br />  
 stitcher->setFeaturesMatcher(makePtr&lt;LightGlue&gt;());//LightGlue feature matching<br />  
 Stitcher::Status status = stitcher->stitch(imgs, pano);<br />  
+Run exe and set parameters, for example --mode panorama --lg D:\superpoint_lightglue.onnx --sp D:\superpoint.onnx D:\1.jpg D:\2.jpg  
+Stitching supports two transformation models, affine transformation and perspective transformation, specified by --mode (panorama|scans), panorama represents the perspective transformation model, and scans represents the affine transformation model  
+--sp specifies the superpoint onnx format model path  
+--lg specifies the lightflue onnx format model path  
+D:\1.jpg D:\2.jpg is input image for splicing  
 
 For those who are not familiar with C++, I also provide a C#Demo.<br />  
 [CSharpDemo](csharpDemo.cs)<br />  
