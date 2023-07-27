@@ -1,8 +1,9 @@
 #include"superpoint.h"
+#include <onnxruntime_cxx_api.h>
 
-
-SuperPoint::SuperPoint()
+SuperPoint::SuperPoint(std::wstring modelPath)
 {
+	this->m_modelPath = modelPath;
 	/*HMODULE g_hInstance;
 	g_hInstance = ::GetCurrentModule();
 	HRSRC hRcmodel = FindResource(g_hInstance, MAKEINTRESOURCE(IDR_SUPERPOINT1), "SUPERPOINT");
@@ -46,8 +47,7 @@ void SuperPoint::detectAndCompute(InputArray image, InputArray mask,
 	Ort::SessionOptions sessionOptions;
 	sessionOptions.SetIntraOpNumThreads(1);
 	sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-	std::wstring wstr = L"D:\\superpoint.onnx";
-	static Ort::Session extractorSession(env, wstr.c_str(), sessionOptions);
+	static Ort::Session extractorSession(env, this->m_modelPath.c_str(), sessionOptions);
 
 	Mat img = image.getMat();
 	Mat grayImg;
@@ -55,7 +55,7 @@ void SuperPoint::detectAndCompute(InputArray image, InputArray mask,
 	float mean, std;
 	vector<float> imgData = ApplyTransform(grayImg, mean, std);
 
-	vector<int64_t> inputShape{ 1, 1, grayImg.rows，grayImg.cols};
+	vector<int64_t> inputShape{ 1, 1, grayImg.rows, grayImg.cols };
 
 	Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
 	Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, imgData.data(), imgData.size(), inputShape.data(), inputShape.size());
@@ -102,15 +102,14 @@ void SuperPoint::detect(InputArray image,
 	Ort::SessionOptions sessionOptions;
 	sessionOptions.SetIntraOpNumThreads(1);
 	sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-	std::wstring wstr = L"D:\\superpoint.onnx";
-	static Ort::Session extractorSession(env, wstr.c_str(), sessionOptions);
+	static Ort::Session extractorSession(env, this->m_modelPath.c_str(), sessionOptions);
 
 	Mat img = image.getMat();
 	Mat grayImg;
 	cvtColor(img, grayImg, COLOR_BGR2GRAY);
 	float mean, std;
 	vector<float> imgData = ApplyTransform(grayImg, mean, std);
-	vector<int64_t> inputShape{ 1, 1,grayImg.rows，grayImg.cols};
+	vector<int64_t> inputShape{ 1, 1, grayImg.rows, grayImg.cols };
 	Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
 	Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, imgData.data(), imgData.size(), inputShape.data(), inputShape.size());
 
@@ -141,8 +140,7 @@ void SuperPoint::compute(InputArray image,
 	Ort::SessionOptions sessionOptions;
 	sessionOptions.SetIntraOpNumThreads(1);
 	sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-	std::wstring wstr = L"D:\\superpoint.onnx";
-	static Ort::Session extractorSession(env, wstr.c_str(), sessionOptions);
+	static Ort::Session extractorSession(env, this->m_modelPath.c_str(), sessionOptions);
 
 	Mat img = image.getMat();
 	Mat grayImg;
@@ -151,7 +149,7 @@ void SuperPoint::compute(InputArray image,
 
 	vector<float> imgData = ApplyTransform(grayImg, mean, std);
 
-	vector<int64_t> inputShape{ 1, 1,grayImg.rows， grayImg.cols };
+	vector<int64_t> inputShape{ 1, 1, grayImg.rows, grayImg.cols };
 
 	Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
 	Ort::Value inputTensor = Ort::Value::CreateTensor<float>(memoryInfo, imgData.data(), imgData.size(), inputShape.data(), inputShape.size());
