@@ -74,12 +74,21 @@ project_root/
  ## 集成到OpenCV中</h2>  
 然后将新增加的类设置到拼接流水线中。  
 [CPPDemo](cppDemo.cpp)  
-Mat pano;  
-Ptr<Stitcher> stitcher = Stitcher::create(mode);  
-stitcher->setFeaturesFinder(makePtr&lt;SuperPoint&gt;());//SpuerPoint feature extraction  
-stitcher->setFeaturesMatcher(makePtr&lt;LightGlue&gt;());//LightGlue feature matching  
-Stitcher::Status status = stitcher->stitch(imgs, pano);  
+ Mat pano;  
+ Ptr<Stitcher> stitcher = Stitcher::create(mode);      
+ Ptr<SuperPoint> superpointp = makePtr<SuperPoint>(sp);  
+ Ptr<LightGlue> lightglue = makePtr<LightGlue>(lh, mode);  
+ stitcher->setPanoConfidenceThresh(0.1f);   
+ stitcher->setFeaturesFinder(superpointp);//SpuerPoint feature extraction  
+ stitcher->setFeaturesMatcher(lightglue);//LightGlue feature matching   
+ Stitcher::Status status = stitcher->stitch(imgs, pano); 
 
+运行exe，并设置参数，例如--mode panorama --lg D:\\superpoint_lightglue.onnx --sp D:\\superpoint.onnx D:\\1.jpg D:\2.jpg   
+拼接支持两种变换模型，仿射变换和透视变换，由--mode (panorama|scans)指定，panorama表示透视变换模型，scans代表仿射变换模型  
+--sp 指定superpoint onnx格式模型路径  
+--lg 指定lightflue onnx格式模型路径  
+ D:\\1.jpg D:\2.jpg为拼接输入图像  
+ 
 对于不熟悉C++的，我还提供了C#Demo  
 [CSharpDemo](csharpDemo.cs)  
 
