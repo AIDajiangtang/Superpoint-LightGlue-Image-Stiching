@@ -52,7 +52,7 @@ LightGlue:
 
  ## 如何编译</h2>  
 目前仅在Windows 11，Visualstudio2019，Cmake3.26.4中测试成功   
-1.微信公众号回复【sl】获取预训练模型，将模型放到D盘根目录（或者将dll以资源的方式存储到dll中）  
+1.微信公众号回复【sl】获取预训练模型 ，模型路径通过参数传递给程序  
 微信公众号：**人工智能大讲堂**  
 <img width="180" src="https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg">  
 
