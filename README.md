@@ -39,12 +39,12 @@ stitcher->setFeaturesMatcher(makePtr<detail::AffineBestOf2NearestMatcher>(true, 
  ## 深度学习特征检测匹配算法</h2>  
 说到这里该我们的主角出场了，我们要为OpenCV追加一种深度学习特征提取算法：SuperPoint，以及深度学习特征匹配算法：LightGlue。  
 SuperPoint：​  
-论文地址：https://arxiv.org/pdf/1712.07629.pdf  
-官方源码：https://github.com/rpautrat/SuperPoint  
+[[`Paper`](https://arxiv.org/pdf/1712.07629.pdf)] [[`源码`](https://github.com/rpautrat/SuperPoint )]  
+
 ​
 LightGlue:  
-论文地址：https://arxiv.org/pdf/2306.13643.pdf  
-官方源码：https://github.com/cvg/LightGlue  
+[[`Paper`](https://arxiv.org/pdf/2306.13643.pdf )] [[`源码`](https://github.com/cvg/LightGlue)]  
+
 
 根据OpenCV中类继承体系，特征提取类的基类为Feature2D，特征匹配的基类为FeaturesMatcher，我们以此为基类新增两个类：SuperPoint和LightGlue，并重新实现基类的虚方法。  
 [superpoint](superpoint.cpp)  
