@@ -70,7 +70,7 @@ project_root/
   |- onnxruntime-win-x64-1.15.1/  
   |- CMakeLists.txt  
 
-3.打开Cmake，输入源码路径和编译输出路径，然后以此点积Config，Generate，Open Project  
+3.打开Cmake，输入源码路径和编译输出路径，然后以此点积Config->Generate->Open Project  
 
  ## 集成到OpenCV中</h2>  
 然后将新增加的类设置到拼接流水线中。  
