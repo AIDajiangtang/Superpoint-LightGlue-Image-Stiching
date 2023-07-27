@@ -5,6 +5,7 @@
 #include "lightglue.h"
 #include <iostream>
 #include "common.h"
+#include <codecvt>
 using namespace std;
 using namespace cv;
 
@@ -12,6 +13,8 @@ bool divide_images = false;
 Stitcher::Mode mode = Stitcher::PANORAMA;
 vector<Mat> imgs;
 string result_name = "result.jpg";
+string superPointPath;//SuperPoint ONNX format model path
+string lightGluePath;//LightGlue ONNX format model path
 
 void printUsage(char** argv);
 int parseCmdArgs(int argc, char** argv);
@@ -21,22 +24,54 @@ int main(int argc, char* argv[])
     int retval = parseCmdArgs(argc, argv);
     if (retval) return EXIT_FAILURE;
 
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    std::wstring sp = converter.from_bytes(superPointPath);
+    std::wstring lh = converter.from_bytes(lightGluePath);
     //![stitching]
     Mat pano;
     Ptr<Stitcher> stitcher = Stitcher::create(mode);
-    stitcher->setFeaturesFinder(makePtr<SuperPoint>());//SpuerPoint feature extraction
-    stitcher->setFeaturesMatcher(makePtr<LightGlue>());//LightGlue feature matching
+    
+    Ptr<SuperPoint> superpointp = makePtr<SuperPoint>(sp);
+    Ptr<LightGlue> lightglue = makePtr<LightGlue>(lh, mode);
+    stitcher->setPanoConfidenceThresh(0.1f);
+    stitcher->setFeaturesFinder(superpointp);//SpuerPoint feature extraction
+    stitcher->setFeaturesMatcher(lightglue);//LightGlue feature matching
     Stitcher::Status status = stitcher->stitch(imgs, pano);
-
     if (status != Stitcher::OK)
     {
         cout << "Can't stitch images, error code = " << int(status) << endl;
         return EXIT_FAILURE;
     }
-    //![stitching]
 
-    imwrite(result_name, pano);
-    cout << "stitching completed successfully\n" << result_name << " saved!";
+    //Draw Matches
+    std::vector<detail::ImageFeatures> features = lightglue->features();
+    std::vector<detail::MatchesInfo> matches = lightglue->matchinfo();
+    for (int i=0;i< matches.size();i++)
+    {
+        Mat srcImg = imgs[matches[i].src_img_idx];
+        Mat dstImg = imgs[matches[i].dst_img_idx];
+
+        detail::ImageFeatures srcFeature;
+        detail::ImageFeatures dstFeature;
+        for (int j = 0; j < features.size(); j++)
+        {
+            if (features[j].img_idx == matches[i].src_img_idx)
+                srcFeature = features[j];
+            if (features[j].img_idx == matches[i].dst_img_idx)
+                dstFeature = features[j];
+        }
+        //-- Draw matches
+        Mat img_matches;
+        drawMatches(srcImg, srcFeature.keypoints, dstImg, dstFeature.keypoints, matches[i].matches, img_matches);
+		
+		//Stiching Result
+		imshow("Stiche Image", pano);
+        //-- Show detected matches
+        imshow("Matches", img_matches);
+        cv::waitKey();
+    }
+
     return EXIT_SUCCESS;
 }
 
@@ -54,6 +89,8 @@ void printUsage(char** argv)
          "      for stitching materials under affine transformation, such as scans.\n"
          "  --output <result_img>\n"
          "      The default is 'result.jpg'.\n\n"
+         "  --sp <SuperPoint ONNX format model path>\n"
+         "  --lg <LightGlue ONNX format model path>\n"
          "Example usage :\n" << argv[0] << " --d3 --mode scans img1.jpg img2.jpg\n";
 }
 
@@ -72,6 +109,20 @@ int parseCmdArgs(int argc, char** argv)
         {
             printUsage(argv);
             return EXIT_FAILURE;
+        }
+        else if (string(argv[i]) == "--d3")
+        {
+            divide_images = true;
+        }
+        else if (string(argv[i]) == "--sp")//SuperPoint ONNX format model path
+        {
+            superPointPath = argv[i+1];
+            i++;
+        }
+        else if (string(argv[i]) == "--lg")//LightGlue ONNX format model path
+        {
+            lightGluePath = argv[i+1];
+            i++;
         }
         else if (string(argv[i]) == "--d3")
         {
