@@ -55,7 +55,6 @@ LightGlue:
 1.微信公众号回复【sl】获取预训练模型，将模型放到D盘根目录（或者将dll以资源的方式存储到dll中）  
 微信公众号：**人工智能大讲堂**  
 <img width="180" src="https://user-images.githubusercontent.com/18625471/228743333-77abe467-2385-476d-86a2-e232c6482291.jpg">  
-<img width="180" src="https://user-images.githubusercontent.com/18625471/256416264-70a4d2b3-1fc5-4905-9347-7b77e209fc6e.jpg">  
 
 后台回复【sl】获取上面的预训练模型和第三方依赖库。  
 2.微信公众号回复【sl】获取第三方库：OpenCV和ONNXRuntime，然后将其解压到源码目录，OPenCV是我用Visual Studio2019编译的。ONNXRuntime不需要自己编译，下载官网编译好的即可  
@@ -90,6 +89,11 @@ project_root/
 --sp 指定superpoint onnx格式模型路径  
 --lg 指定lightflue onnx格式模型路径  
  D:\\1.jpg D:\2.jpg为拼接输入图像  
+
+拼接结果  
+ <img width="180" src="https://user-images.githubusercontent.com/18625471/256420139-3c03fbcb-3047-44a5-9403-d98f86e222da.jpg">  
+特征匹配  
+<img width="180" src="https://user-images.githubusercontent.com/18625471/256420458-c296cd92-ddbc-479d-a224-ba01a56450f5.jpg">  
  
 对于不熟悉C++的，我还提供了C#Demo  
 [CSharpDemo](csharpDemo.cs)  
