@@ -1,22 +1,11 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <Windows.h>
-#include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/stitching.hpp"
 #include<iostream>
-#include <fstream> //for file operations
-#include "opencv2/xfeatures2d.hpp"
-#include "opencv2/xfeatures2d/nonfree.hpp"
-#include "opencv2/stitching/detail/matchers.hpp"
-#include "opencv2/core/ocl.hpp"
-#include <opencv2/imgproc.hpp>
+#include "opencv2/stitching.hpp"
 #include "opencv2/calib3d.hpp"
-#include <onnxruntime_cxx_api.h>
-#include <math.h>
 #include "common.h"
+
 using namespace cv::detail;
 using namespace cv;
 using namespace std;
@@ -24,9 +13,10 @@ using namespace std;
 class  FEATURE_MATCHER_EXPORTS SuperPoint :public Feature2D
 {
 protected:
+	std::wstring m_modelPath;
 	vector<float> ApplyTransform(const Mat& image, float& mean, float& std);
 public:
-	SuperPoint();
+	SuperPoint(std::wstring modelPath);
 	virtual void detectAndCompute(InputArray image, InputArray mask,
 		std::vector<KeyPoint>& keypoints,
 		OutputArray descriptors,
