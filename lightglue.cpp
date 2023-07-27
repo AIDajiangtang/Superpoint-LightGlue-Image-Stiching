@@ -1,8 +1,10 @@
 #include"lightglue.h"
+#include <onnxruntime_cxx_api.h>
 
-
-LightGlue::LightGlue()
+LightGlue::LightGlue(std::wstring modelPath, Stitcher::Mode mode)
 {
+	this->m_mode = mode;
+	this->m_modelPath = modelPath;
 	/*	HMODULE g_hInstance;
 		g_hInstance = ::GetCurrentModule();
 		HRSRC hRcmodel = FindResource(g_hInstance, MAKEINTRESOURCE(IDR_LIGHTGLUE1), "LIGHTGLUE");
@@ -23,9 +25,8 @@ void LightGlue::match(const ImageFeatures& features1, const ImageFeatures& featu
 	Ort::SessionOptions sessionOptions;
 	sessionOptions.SetIntraOpNumThreads(1);
 	sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-	std::wstring wstr = L"D:\\superpoint_lightglue.onnx";
 	// Load the LightGlue network
-	static Ort::Session lightglueSession(env, wstr.c_str(), sessionOptions);
+	static Ort::Session lightglueSession(env, this->m_modelPath.c_str(), sessionOptions);
 	vector<float>kp1; kp1.resize(features1.keypoints.size() * 2);
 	vector<float>kp2; kp2.resize(features2.keypoints.size() * 2);
 	float f1wid = features1.img_size.width / 2.0f;
@@ -83,60 +84,168 @@ void LightGlue::match(const ImageFeatures& features1, const ImageFeatures& featu
 	int64_t* match1 = (int64_t*)outputs[0].GetTensorMutableData<void>();
 	int match1counts = match1shape[1];
 
-	std::vector<int64_t> mscoreshape = outputs[3].GetTensorTypeAndShapeInfo().GetShape();
-	float* mscore1 = (float*)outputs[3].GetTensorMutableData<void>();
+	std::vector<int64_t> mscoreshape = outputs[2].GetTensorTypeAndShapeInfo().GetShape();
+	float* mscore1 = (float*)outputs[2].GetTensorMutableData<void>();
 	int mscorecounts = mscoreshape[1];
 
 	std::vector<int64_t> match2shape = outputs[1].GetTensorTypeAndShapeInfo().GetShape();
 	int64_t* match2 = (int64_t*)outputs[1].GetTensorMutableData<void>();
 	int match2counts = match2shape[1];
+	
+	matches_info.src_img_idx = features1.img_idx;
+	matches_info.dst_img_idx = features2.img_idx;
 
-	vector<float>matchs;
 	for (int i = 0; i < match1counts; i++)
 	{
 		if (match1[i] > -1 && mscore1[i] > 0.0f && match2[match1[i]] == i)
 		{
-			matchs.push_back(i);
-			matchs.push_back(match1[i]);
+			DMatch mt;
+			mt.queryIdx = i;
+			mt.trainIdx = match1[i];
+			matches_info.matches.push_back(mt);
 		}
 	}
-	std::cout << "matches count:" << matchs.size() << std::endl;
+	std::cout << "matches count:" << matches_info.matches.size() << std::endl;
 	// Construct point-point correspondences for transform estimation
-	Mat src_points(1, static_cast<int>(matchs.size() / 2), CV_32FC2);
-	Mat dst_points(1, static_cast<int>(matchs.size() / 2), CV_32FC2);
-	for (size_t i = 0; i < matchs.size() / 2; ++i)
-	{
-		src_points.at<Point2f>(0, static_cast<int>(i)) = features1.keypoints[matchs[2 * i]].pt;
-		dst_points.at<Point2f>(0, static_cast<int>(i)) = features2.keypoints[matchs[2 * i + 1]].pt;
-	}
+	Mat src_points(1, static_cast<int>(matches_info.matches.size()), CV_32FC2);
+	Mat dst_points(1, static_cast<int>(matches_info.matches.size()), CV_32FC2);
+	/// <summary>
+	/// 仿射变换
+	/// </summary>
+	if (this->m_mode == Stitcher::SCANS)
+	{	
+		for (size_t i = 0; i < matches_info.matches.size(); ++i)
+		{
+			src_points.at<Point2f>(0, static_cast<int>(i)) = features1.keypoints[matches_info.matches[i].queryIdx].pt;
+			dst_points.at<Point2f>(0, static_cast<int>(i)) = features2.keypoints[matches_info.matches[i].trainIdx].pt;
+		}
 
-	// Find pair-wise motion
-	matches_info.H = estimateAffine2D(src_points, dst_points, matches_info.inliers_mask);
+		// Find pair-wise motion
+		matches_info.H = estimateAffine2D(src_points, dst_points, matches_info.inliers_mask);
 
-	if (matches_info.H.empty()) {
-		// could not find transformation
-		matches_info.confidence = 0;
+		if (matches_info.H.empty()) {
+			// could not find transformation
+			matches_info.confidence = 0;
+			matches_info.num_inliers = 0;
+			return;
+		}
+
+		// Find number of inliers
 		matches_info.num_inliers = 0;
-		return;
+		for (size_t i = 0; i < matches_info.inliers_mask.size(); ++i)
+			if (matches_info.inliers_mask[i])
+				matches_info.num_inliers++;
+
+		// These coeffs are from paper M. Brown and D. Lowe. "Automatic Panoramic
+		// Image Stitching using Invariant Features"
+		matches_info.confidence =
+			matches_info.num_inliers / (8 + 0.3 * matches_info.matches.size());
+
+		/* should we remove matches between too close images? */
+		// matches_info.confidence = matches_info.confidence > 3. ? 0. : matches_info.confidence;
+
+		// extend H to represent linear transformation in homogeneous coordinates
+		matches_info.H.push_back(Mat::zeros(1, 3, CV_64F));
+		matches_info.H.at<double>(2, 2) = 1;
 	}
+	else if (this->m_mode == Stitcher::PANORAMA)//透视变换
+	{
+		for (size_t i = 0; i < matches_info.matches.size(); ++i)
+		{
+			const DMatch& m = matches_info.matches[i];
 
-	// Find number of inliers
-	matches_info.num_inliers = 0;
-	for (size_t i = 0; i < matches_info.inliers_mask.size(); ++i)
-		if (matches_info.inliers_mask[i])
-			matches_info.num_inliers++;
+			Point2f p = features1.keypoints[m.queryIdx].pt;
+			p.x -= features1.img_size.width * 0.5f;
+			p.y -= features1.img_size.height * 0.5f;
+			src_points.at<Point2f>(0, static_cast<int>(i)) = p;
 
-	// These coeffs are from paper M. Brown and D. Lowe. "Automatic Panoramic
-	// Image Stitching using Invariant Features"
-	matches_info.confidence =
-		matches_info.num_inliers / (8 + 0.3 * matches_info.matches.size());
+			p = features2.keypoints[m.trainIdx].pt;
+			p.x -= features2.img_size.width * 0.5f;
+			p.y -= features2.img_size.height * 0.5f;
+			dst_points.at<Point2f>(0, static_cast<int>(i)) = p;
+		}
 
-	/* should we remove matches between too close images? */
-	// matches_info.confidence = matches_info.confidence > 3. ? 0. : matches_info.confidence;
+		// Find pair-wise motion
+		matches_info.H = findHomography(src_points, dst_points, matches_info.inliers_mask, RANSAC);
+		if (matches_info.H.empty() || std::abs(determinant(matches_info.H)) < std::numeric_limits<double>::epsilon())
+			return;
 
-	// extend H to represent linear transformation in homogeneous coordinates
-	matches_info.H.push_back(Mat::zeros(1, 3, CV_64F));
-	matches_info.H.at<double>(2, 2) = 1;
+		// Find number of inliers
+		matches_info.num_inliers = 0;
+		for (size_t i = 0; i < matches_info.inliers_mask.size(); ++i)
+			if (matches_info.inliers_mask[i])
+				matches_info.num_inliers++;
 
+		// These coeffs are from paper M. Brown and D. Lowe. "Automatic Panoramic Image Stitching
+		// using Invariant Features"
+		matches_info.confidence = matches_info.num_inliers / (8 + 0.3 * matches_info.matches.size());
+
+		// Set zero confidence to remove matches between too close images, as they don't provide
+		// additional information anyway. The threshold was set experimentally.
+		matches_info.confidence = matches_info.confidence > 3. ? 0. : matches_info.confidence;
+
+		// Check if we should try to refine motion
+		if (matches_info.num_inliers < 6)
+			return;
+
+		// Construct point-point correspondences for inliers only
+		src_points.create(1, matches_info.num_inliers, CV_32FC2);
+		dst_points.create(1, matches_info.num_inliers, CV_32FC2);
+		int inlier_idx = 0;
+		for (size_t i = 0; i < matches_info.matches.size(); ++i)
+		{
+			if (!matches_info.inliers_mask[i])
+				continue;
+
+			const DMatch& m = matches_info.matches[i];
+
+			Point2f p = features1.keypoints[m.queryIdx].pt;
+			p.x -= features1.img_size.width * 0.5f;
+			p.y -= features1.img_size.height * 0.5f;
+			src_points.at<Point2f>(0, inlier_idx) = p;
+
+			p = features2.keypoints[m.trainIdx].pt;
+			p.x -= features2.img_size.width * 0.5f;
+			p.y -= features2.img_size.height * 0.5f;
+			dst_points.at<Point2f>(0, inlier_idx) = p;
+
+			inlier_idx++;
+		}
+
+		// Rerun motion estimation on inliers only
+		matches_info.H = findHomography(src_points, dst_points, RANSAC);
+	}
+	
+	std::cout << matches_info.H << std::endl;
+	this->AddFeature(features1);
+	this->AddFeature(features2);
+	this->AddMatcheinfo(matches_info);
+	matches_info.matches.clear();
+}
+void LightGlue::AddFeature(detail::ImageFeatures features) {
+	bool find = false;
+	for (int i = 0; i < this->features_.size(); i++)
+	{
+		if (features.img_idx == this->features_[i].img_idx)
+			find = true;
+	}
+	if(find == false)
+		this->features_.push_back(features);
+}
+void LightGlue::AddMatcheinfo(const detail::MatchesInfo& matches)
+{
+	bool find = false;
+	for (int i = 0; i < this->pairwise_matches_.size(); i++)
+	{
+		if (matches.src_img_idx == this->pairwise_matches_[i].src_img_idx &&
+			matches.dst_img_idx == this->pairwise_matches_[i].dst_img_idx)
+			find = true;
+		if (matches.src_img_idx == this->pairwise_matches_[i].dst_img_idx &&
+			matches.dst_img_idx == this->pairwise_matches_[i].src_img_idx)
+			find = true;
+
+	}
+	if (find == false)
+		this->pairwise_matches_.push_back(detail::MatchesInfo(matches));
 }
 
