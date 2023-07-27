@@ -39,17 +39,12 @@ Thanks to the object-oriented programming concept of C++, different feature extr
 
 Now, our protagonist comes on stage. We need to add a deep learning feature extraction algorithm, SuperPoint, and a deep learning feature matching algorithm, LightGlue, to OpenCV.<br />  
 
-SuperPoint:<br />  
+SuperPoint：​  
+[[`Paper`](https://arxiv.org/pdf/1712.07629.pdf)] [[`源码`](https://github.com/rpautrat/SuperPoint )]  
 
-Paper: https://arxiv.org/pdf/1712.07629.pdf<br />  
-
-Official code: https://github.com/rpautrat/SuperPoint<br />  
-
-LightGlue:<br />  
-
-Paper: https://arxiv.org/pdf/2306.13643.pdf<br />  
-
-Official code: https://github.com/cvg/LightGlue<br />  
+​
+LightGlue:  
+[[`Paper`](https://arxiv.org/pdf/2306.13643.pdf )] [[`源码`](https://github.com/cvg/LightGlue)]  
 
 According to the inheritance system of OpenCV classes, the base class of the feature extractor is Feature2D, and the base class of the feature matcher is FeaturesMatcher. We add two classes based on this: SuperPoint and LightGlue, and re-implement the virtual methods of the base class.<br />  
 
