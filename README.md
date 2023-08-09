@@ -75,10 +75,14 @@ project_root/
  ## 集成到OpenCV中</h2>  
 然后将新增加的类设置到拼接流水线中。  
 [CPPDemo](cppDemo.cpp)  
+ std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;  
+ std::wstring sp = converter.from_bytes(superPointPath);  
+ std::wstring lh = converter.from_bytes(lightGluePath);  
+ 
  Mat pano;  
  Ptr<Stitcher> stitcher = Stitcher::create(mode);      
- Ptr<SuperPoint> superpointp = makePtr<SuperPoint>(sp);  
- Ptr<LightGlue> lightglue = makePtr<LightGlue>(lh, mode);  
+ Ptr<SuperPoint> superpointp = makePtr&ltSuperPoint&lt(sp);  
+ Ptr<LightGlue> lightglue = makePtrr&ltLightGlue&lt(lh, mode);  
  stitcher->setPanoConfidenceThresh(0.1f);   
  stitcher->setFeaturesFinder(superpointp);//SpuerPoint feature extraction  
  stitcher->setFeaturesMatcher(lightglue);//LightGlue feature matching   
