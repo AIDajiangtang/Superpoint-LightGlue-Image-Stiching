@@ -81,8 +81,8 @@ project_root/
  
  Mat pano;  
  Ptr<Stitcher> stitcher = Stitcher::create(mode);      
- Ptr<SuperPoint> superpointp = makePtr&ltSuperPoint&lt(sp);  
- Ptr<LightGlue> lightglue = makePtrr&ltLightGlue&lt(lh, mode);  
+ Ptr<SuperPoint> superpointp = makePtr&lt&lt;SuperPoint&lt&lt;(sp);  
+ Ptr<LightGlue> lightglue = makePtrr&lt&lt;LightGlue&lt&lt;(lh, mode);  
  stitcher->setPanoConfidenceThresh(0.1f);   
  stitcher->setFeaturesFinder(superpointp);//SpuerPoint feature extraction  
  stitcher->setFeaturesMatcher(lightglue);//LightGlue feature matching   
