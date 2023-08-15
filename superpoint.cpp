@@ -21,19 +21,20 @@ vector<float> SuperPoint::ApplyTransform(const Mat& image, float& mean, float& s
 {
 	Mat resized, floatImage;
 	image.convertTo(floatImage, CV_32FC1);
-	mean = 0.0f;
-	std = 0.0f;
-	Scalar meanScalar, stdScalar;
-	meanStdDev(floatImage, meanScalar, stdScalar);
-	mean = static_cast<float>(meanScalar.val[0]);
-	std = static_cast<float>(stdScalar.val[0]);
+	//mean = 0.0f;
+	//std = 0.0f;
+	//Scalar meanScalar, stdScalar;
+	//meanStdDev(floatImage, meanScalar, stdScalar);
+	//mean = static_cast<float>(meanScalar.val[0]);
+	//std = static_cast<float>(stdScalar.val[0]);
 
 	vector<float> imgData;
 	for (int h = 0; h < image.rows; h++)
 	{
 		for (int w = 0; w < image.cols; w++)
 		{
-			imgData.push_back((floatImage.at<float>(h, w) - mean) / std);
+			/*imgData.push_back((floatImage.at<float>(h, w) - mean) / std);*/
+			imgData.push_back(floatImage.at<float>(h, w) / 255.0f);
 		}
 	}
 	return imgData;
