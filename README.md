@@ -88,7 +88,7 @@ project_root/
  stitcher->setFeaturesMatcher(lightglue);//LightGlue feature matching   
  Stitcher::Status status = stitcher->stitch(imgs, pano); 
 
-1.将onnxruntime.dll和opencv_world455.dll（opencv_world455d.dll debug模式）放到exe路径下  
+1.将onnxruntime.dll和opencv_world455.dll（opencv_world455d.dll debug模式）hdf5.dll，zlib.dll放到exe路径下  
 2.运行cppDemo.exe，并设置参数，例如--mode panorama --lg D:\\superpoint_lightglue.onnx --sp D:\\superpoint.onnx D:\\1.jpg D:\2.jpg  
 
 <img width="500" src="https://user-images.githubusercontent.com/18625471/256421932-94e8b07b-fc4b-4307-a94e-e7e735d620d8.jpg">  
