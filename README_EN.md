@@ -78,7 +78,7 @@ Ptr<Stitcher> stitcher = Stitcher::create(mode);<br />
 stitcher->setFeaturesFinder(makePtr&lt;SuperPoint&gt;());//SpuerPoint feature extraction<br />  
 stitcher->setFeaturesMatcher(makePtr&lt;LightGlue&gt;());//LightGlue feature matching<br />  
 Stitcher::Status status = stitcher->stitch(imgs, pano);<br />  
-1.Put onnxruntime.dll and opencv_world455.dll (opencv_world455d.dll debug mode) in the exe path  
+1.Put onnxruntime.dll and opencv_world455.dll (opencv_world455d.dll debug mode) hdf5.dll,zlib.dll in the exe path  
 2.Run cppDemo.exe and set parameters, for example --mode panorama --lg D:\\superpoint_lightglue.onnx --sp D:\\superpoint.onnx D:\\1.jpg D:\2.jpg  
 <img width="500" src="https://user-images.githubusercontent.com/18625471/256421932-94e8b07b-fc4b-4307-a94e-e7e735d620d8.jpg">  
 
