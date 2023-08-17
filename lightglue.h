@@ -18,6 +18,7 @@ protected:
 	std::wstring m_modelPath;
 	std::vector<detail::ImageFeatures> features_;
 	std::vector<detail::MatchesInfo> pairwise_matches_;
+	float m_matchThresh = 0.0;//匹配阈值
 	CV_WRAP_AS(apply) void operator ()(const ImageFeatures& features1, const ImageFeatures& features2,
 		CV_OUT MatchesInfo& matches_info) {
 		match(features1, features2, matches_info);
@@ -25,7 +26,7 @@ protected:
 	void AddFeature(detail::ImageFeatures features);
 	void AddMatcheinfo(const MatchesInfo& matches_info);
 public:
-	LightGlue(std::wstring modelPath, Stitcher::Mode mode);
+	LightGlue(std::wstring modelPath, Stitcher::Mode mode, float matchThresh);
 	void match(const ImageFeatures& features1, const ImageFeatures& features2,
 		MatchesInfo& matches_info);
 	std::vector<detail::ImageFeatures> features() { return features_; };
