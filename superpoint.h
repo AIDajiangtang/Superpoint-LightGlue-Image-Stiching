@@ -13,6 +13,7 @@ using namespace std;
 class  FEATURE_MATCHER_EXPORTS SuperPoint :public Feature2D
 {
 protected:
+	
 	std::wstring m_modelPath;
 	vector<float> ApplyTransform(const Mat& image, float& mean, float& std);
 public:
