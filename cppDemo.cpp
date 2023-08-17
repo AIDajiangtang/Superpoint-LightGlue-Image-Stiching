@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
     Stitcher::Status status = stitcher->stitch(imgs, pano);
     if (status == Stitcher::OK)
     {
+        imshow(stichedImage, pano);
         cv::imwrite(stichedImage,pano);
     }
 
@@ -68,9 +69,9 @@ int main(int argc, char* argv[])
         Mat DstresizedImage;
         resize(dstImg, DstresizedImage, dstFeature.img_size);
         drawMatches(SrcresizedImage, srcFeature.keypoints, DstresizedImage, dstFeature.keypoints, matches[i].matches, img_matches);
-        cv::imwrite(matchingImage, pano);
+        cv::imwrite(matchingImage, img_matches);
         //-- Show detected matches
-        imshow("Matches", img_matches);
+        imshow(matchingImage, img_matches);
         cv::waitKey();
     }
 
