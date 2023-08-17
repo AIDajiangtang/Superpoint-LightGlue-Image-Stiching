@@ -1,8 +1,9 @@
 #include"lightglue.h"
 #include <onnxruntime_cxx_api.h>
 
-LightGlue::LightGlue(std::wstring modelPath, Stitcher::Mode mode)
+LightGlue::LightGlue(std::wstring modelPath, Stitcher::Mode mode, float matchThresh)
 {
+	this->m_matchThresh = matchThresh;
 	this->m_mode = mode;
 	this->m_modelPath = modelPath;
 	/*	HMODULE g_hInstance;
@@ -84,27 +85,45 @@ void LightGlue::match(const ImageFeatures& features1, const ImageFeatures& featu
 	int64_t* match1 = (int64_t*)outputs[0].GetTensorMutableData<void>();
 	int match1counts = match1shape[1];
 
-	std::vector<int64_t> mscoreshape = outputs[2].GetTensorTypeAndShapeInfo().GetShape();
+	std::vector<int64_t> mscoreshape1 = outputs[2].GetTensorTypeAndShapeInfo().GetShape();
 	float* mscore1 = (float*)outputs[2].GetTensorMutableData<void>();
-	int mscorecounts = mscoreshape[1];
 
 	std::vector<int64_t> match2shape = outputs[1].GetTensorTypeAndShapeInfo().GetShape();
 	int64_t* match2 = (int64_t*)outputs[1].GetTensorMutableData<void>();
 	int match2counts = match2shape[1];
-	
+
+	std::vector<int64_t> mscoreshape2 = outputs[3].GetTensorTypeAndShapeInfo().GetShape();
+	float* mscore2 = (float*)outputs[3].GetTensorMutableData<void>();
+
 	matches_info.src_img_idx = features1.img_idx;
 	matches_info.dst_img_idx = features2.img_idx;
 
+	std::set<std::pair<int, int> > matches;
 	for (int i = 0; i < match1counts; i++)
 	{
-		if (match1[i] > -1 && mscore1[i] > 0.0f && match2[match1[i]] == i)
+		if (match1[i] > -1 && mscore1[i] > this->m_matchThresh && match2[match1[i]] == i)
 		{
 			DMatch mt;
 			mt.queryIdx = i;
 			mt.trainIdx = match1[i];
 			matches_info.matches.push_back(mt);
+			matches.insert(std::make_pair(mt.queryIdx, mt.trainIdx));
 		}
 	}
+
+	for (int i = 0; i < match2counts; i++)
+	{
+		if (match2[i] > -1 && mscore2[i] > this->m_matchThresh && match1[match2[i]] == i)
+		{
+			DMatch mt;
+			mt.queryIdx = match2[i];
+			mt.trainIdx = i;
+
+			if (matches.find(std::make_pair(mt.queryIdx, mt.trainIdx)) == matches.end())
+				matches_info.matches.push_back(mt);
+		}
+	}
+
 	std::cout << "matches count:" << matches_info.matches.size() << std::endl;
 	// Construct point-point correspondences for transform estimation
 	Mat src_points(1, static_cast<int>(matches_info.matches.size()), CV_32FC2);
@@ -220,7 +239,6 @@ void LightGlue::match(const ImageFeatures& features1, const ImageFeatures& featu
 	this->AddFeature(features1);
 	this->AddFeature(features2);
 	this->AddMatcheinfo(matches_info);
-	matches_info.matches.clear();
 }
 void LightGlue::AddFeature(detail::ImageFeatures features) {
 	bool find = false;
