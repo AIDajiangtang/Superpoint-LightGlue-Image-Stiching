@@ -103,6 +103,11 @@ project_root/
  <img width="500" src="https://user-images.githubusercontent.com/18625471/256420139-3c03fbcb-3047-44a5-9403-d98f86e222da.jpg">  
 特征匹配  
 <img width="800" src="https://user-images.githubusercontent.com/18625471/256420458-c296cd92-ddbc-479d-a224-ba01a56450f5.jpg">  
+
+拼接结果  
+ <img width="500" src="https://user-images.githubusercontent.com/18625471/261228659-0da21c52-ff7a-4ad5-b440-8ab2b552059f.jpg">  
+特征匹配  
+<img width="800" src="https://user-images.githubusercontent.com/18625471/261228690-3c658b5b-f282-43ed-be05-87758d86f61b.jpg">  
  
 对于不熟悉C++的，我还提供了C#Demo  
 [CSharpDemo](csharpDemo.cs)  
