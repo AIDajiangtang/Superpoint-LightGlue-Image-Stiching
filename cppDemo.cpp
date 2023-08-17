@@ -12,10 +12,11 @@ using namespace cv;
 bool divide_images = false;
 Stitcher::Mode mode = Stitcher::PANORAMA;
 vector<Mat> imgs;
-string result_name = "result.jpg";
+string stichedImage = "stiching.jpg";
+string matchingImage = "matching.jpg";
 string superPointPath;//SuperPoint ONNX format model path
 string lightGluePath;//LightGlue ONNX format model path
-
+float matchthresh = 0.0f;
 void printUsage(char** argv);
 int parseCmdArgs(int argc, char** argv);
 
@@ -23,7 +24,6 @@ int main(int argc, char* argv[])
 {
     int retval = parseCmdArgs(argc, argv);
     if (retval) return EXIT_FAILURE;
-
 
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     std::wstring sp = converter.from_bytes(superPointPath);
@@ -33,15 +33,14 @@ int main(int argc, char* argv[])
     Ptr<Stitcher> stitcher = Stitcher::create(mode);
     
     Ptr<SuperPoint> superpointp = makePtr<SuperPoint>(sp);
-    Ptr<LightGlue> lightglue = makePtr<LightGlue>(lh, mode);
+    Ptr<LightGlue> lightglue = makePtr<LightGlue>(lh, mode, matchthresh);
     stitcher->setPanoConfidenceThresh(0.1f);
     stitcher->setFeaturesFinder(superpointp);//SpuerPoint feature extraction
     stitcher->setFeaturesMatcher(lightglue);//LightGlue feature matching
     Stitcher::Status status = stitcher->stitch(imgs, pano);
-    if (status != Stitcher::OK)
+    if (status == Stitcher::OK)
     {
-        cout << "Can't stitch images, error code = " << int(status) << endl;
-        return EXIT_FAILURE;
+        cv::imwrite(stichedImage,pano);
     }
 
     //Draw Matches
@@ -51,7 +50,7 @@ int main(int argc, char* argv[])
     {
         Mat srcImg = imgs[matches[i].src_img_idx];
         Mat dstImg = imgs[matches[i].dst_img_idx];
-
+     
         detail::ImageFeatures srcFeature;
         detail::ImageFeatures dstFeature;
         for (int j = 0; j < features.size(); j++)
@@ -61,12 +60,15 @@ int main(int argc, char* argv[])
             if (features[j].img_idx == matches[i].dst_img_idx)
                 dstFeature = features[j];
         }
+
         //-- Draw matches
         Mat img_matches;
-        drawMatches(srcImg, srcFeature.keypoints, dstImg, dstFeature.keypoints, matches[i].matches, img_matches);
-		
-		//Stiching Result
-		imshow("Stiche Image", pano);
+        Mat SrcresizedImage;
+        resize(srcImg, SrcresizedImage, srcFeature.img_size);
+        Mat DstresizedImage;
+        resize(dstImg, DstresizedImage, dstFeature.img_size);
+        drawMatches(SrcresizedImage, srcFeature.keypoints, DstresizedImage, dstFeature.keypoints, matches[i].matches, img_matches);
+        cv::imwrite(matchingImage, pano);
         //-- Show detected matches
         imshow("Matches", img_matches);
         cv::waitKey();
@@ -74,7 +76,6 @@ int main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-
 
 void printUsage(char** argv)
 {
@@ -124,13 +125,18 @@ int parseCmdArgs(int argc, char** argv)
             lightGluePath = argv[i+1];
             i++;
         }
+        else if (string(argv[i]) == "--mthresh")//匹配阈值
+        {
+            matchthresh = std::stof(argv[i + 1]); // 将字符串转换为float;
+            i++;
+        }
         else if (string(argv[i]) == "--d3")
         {
             divide_images = true;
         }
         else if (string(argv[i]) == "--output")
         {
-            result_name = argv[i + 1];
+            stichedImage = argv[i + 1];
             i++;
         }
         else if (string(argv[i]) == "--mode")
