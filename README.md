@@ -117,3 +117,17 @@ project_root/
 对于不熟悉C++的，我还提供了C#Demo  
 [CSharpDemo](csharpDemo.cs)  
 
+ ## GPU推理</h2>  
+ 对于推理性能有要求的，同时具备GPU硬件环境的，可以切换到GPU推理模式，一行代码也不需要改，方法如下：  
+ 1.根据GPU型号安装驱动。  
+ 2.下载onnxruntime GPU连接库  
+ https://github.com/microsoft/onnxruntime/releases/download/v1.15.1/onnxruntime-win-x64-gpu-1.15.1.zip  
+ 2.按照CPU推理目录结构解压链接库压缩包。  
+ 3.重新编译源代码。  
+ 4.由于onnxruntime依赖cuda，可以安装cuda tookit，也可以只将cuda运行时dll拷贝到exe所在目录。  
+ 5.由于onnxruntime依赖cudnn，将cudnn dll拷贝到exe所在目录。
+
+cunda运行时dll，cudnn dll我已经为大家准备好了，关注微信公众号：人工智能大讲堂，后台回复og获取。  
+
+ 
+ 
