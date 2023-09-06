@@ -118,7 +118,7 @@ project_root/
 [CSharpDemo](csharpDemo.cs)  
 
  ## GPU推理</h2>  
- 对于推理性能有要求的，同时具备GPU硬件环境的，可以切换到GPU推理模式，一行代码也不需要改，方法如下：  
+ 对于推理性能有要求的，同时具备GPU硬件环境的，可以切换到GPU推理模式，方法如下：  
  1.根据GPU型号安装驱动。  
  2.下载onnxruntime GPU连接库  
  https://github.com/microsoft/onnxruntime/releases/download/v1.15.1/onnxruntime-win-x64-gpu-1.15.1.zip  
