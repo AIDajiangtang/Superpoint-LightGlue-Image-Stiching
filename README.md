@@ -126,7 +126,8 @@ project_root/
  3.重新编译源代码。  
  4.由于onnxruntime依赖cuda，可以安装cuda tookit，也可以只将cuda运行时dll拷贝到exe所在目录。  
  5.由于onnxruntime依赖cudnn，将cudnn dll拷贝到exe所在目录。
-
+ 根据onnxruntime和cuda，cudnn版本对照表。  
+https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html  
 cunda运行时dll，cudnn dll我已经为大家准备好了，关注微信公众号：人工智能大讲堂，后台回复og获取。  
 
  
